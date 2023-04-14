@@ -31,7 +31,7 @@
 #include "pcap.h"
 
 /* prints wire declaration for din */
-#define pr_hdr_din(f) fprintf(f, "wire [74:0] din[0:DATA_SIZE-1] = {\n"); \
+#define pr_hdr_din(f) fprintf(f, "wire [74:0] din[0:DATA_SIZE-1]; \n"); \
                     fprintf(f, "/* {tdata, tkeep, tuser[0:0], tlast, tvalid} */\n");
 
 /* prints a comment with the pkt number that starts */
@@ -46,30 +46,34 @@
 #define is_tlast(len, i) ((len == i) ? 1 : 0)
 
 /* prints din transaction */
-#define pr_din_trn(f, dh, dl, k, u, l, v, trn)   if (trn > 0) fprintf(f, ","); \
+#define pr_din_trn(f, dh, dl, k, u, l, v, trn) \
+                                fprintf(f, "assign din[%d] = ", trn); \
                                 fprintf(f, "{64'h%08x%08x, ", dh, dl); \
                                 fprintf(f, "8'h%02x, ", k); \
-                                fprintf(f, "1'b%x, 1'b%x, 1'b%x}\n", u, l, v);
+                                fprintf(f, "1'b%x, 1'b%x, 1'b%x};\n", u, l, v);
 
-#define pr_close_arr(f) fprintf(f, "};\n");
+#define pr_close_arr(f) fprintf(f, "\n");
 
 #define pr_parm(f, trn, pkts) fprintf(f, "localparam DATA_SIZE = %d;\n", trn); \
                     fprintf(f, "localparam PKT_COUNT  = %d;\n", pkts);
 
 /* prints wire declaration for corrupt_pkt */
-#define pr_hdr_corr(f) fprintf(f, "wire corrupt_pkt[0:PKT_COUNT-1] = {\n");
+#define pr_hdr_corr(f) fprintf(f, "wire corrupt_pkt[0:PKT_COUNT-1]; \n");
 
 /* prints corrupt_pkt val */
-#define pr_corr_v(f, v, trn)   if (trn > 0) fprintf(f, ","); \
-                                fprintf(f, "1'b%x\n", v);
+#define pr_corr_v(f, v, trn) \
+                                fprintf(f, "assign corrupt_pkt[%d] = ", trn); \
+                                fprintf(f, "1'b%x;\n", v);
 
 /* prints wire declaration for disc_pkt */
-#define pr_hdr_disc(f) fprintf(f, "wire [1:0] disc_pkt[0:PKT_COUNT-1] = {\n"); \
+#define pr_hdr_disc(f) fprintf(f, "wire [1:0] disc_pkt[0:PKT_COUNT-1]; \n"); \
                     fprintf(f, "/* 0: no-discontinue -- 1: tuser (explicit underrun) -- 2: tvalid (implicit underrun)*/\n");
 
 /* prints disc_pkt val */
-#define pr_disc_v(f, v, pkt)   if (pkt > 0) fprintf(f, ","); \
-                                fprintf(f, "2'd%d\n", v);
+#define pr_disc_v(f, v, pkt)  static int cnt = 0; \
+			       fprintf(f, "assign disc_pkt[%d] = ", cnt); \
+                              fprintf(f, "2'd%d;\n", v); \
+                              cnt ++;
 
 /* prints 1 if packet should be corrupted */
 void
