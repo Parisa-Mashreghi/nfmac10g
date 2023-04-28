@@ -146,7 +146,6 @@ module nfmac10g_loopback_tb (
         .rx_axis_tlast(rx_axis_tlast),                         // O
         .rx_axis_tuser(rx_axis_tuser)                          // O [0:0]
         );
-
     //-------------------------------------------------------
     // stim_axis_tx
     //-------------------------------------------------------
@@ -169,7 +168,6 @@ module nfmac10g_loopback_tb (
         .aborted_pkts(aborted_pkts),                           // O [63:0]
         .pushed_pkts(pushed_pkts)                              // O [63:0]
         );
-
     //-------------------------------------------------------
     // xgmii_connect
     //-------------------------------------------------------
@@ -191,29 +189,6 @@ module nfmac10g_loopback_tb (
     //-------------------------------------------------------
     // MY FIFO
     //-------------------------------------------------------
-//    entity AXI_stream is
-//  generic (
-//    reset_polarity : std_logic := '0';   --! reset polartity
-//    data_width     : natural   := 128;   --! width of the data bus in bits
-//    depth          : natural   := 512);  --! fifo depth 
-
-//  port (
-//    clk               : in  std_logic;  -- axi clk
-//    reset_n           : in  std_logic;  -- asynchronous reset (active low)
-//    -- master interface
-//    stream_out_tready : in  std_logic;  --! slave ready
-//    stream_out_tlast  : out std_logic;  --! TLAST
-//    stream_out_tvalid : out std_logic;  --! indicate the transfer is valid
-//    stream_out_tdata  : out std_logic_vector(data_width - 1 downto 0);  --! master data
-//    stream_out_tkeep  : out std_logic_vector(data_width/8 - 1 downto 0);
-//    -- slave interface
-//    stream_in_tvalid  : in  std_logic;  --! master output is valid
-//    stream_in_tlast   : in  std_logic;  --! TLAST
-//    stream_in_tready  : out std_logic;  --! ready to receive
-//    stream_in_tdata   : in  std_logic_vector(data_width - 1 downto 0);  --! slave data
-//    stream_in_tkeep   : in  std_logic_vector(data_width/8 - 1 downto 0)
-//    );
-//end entity;
 //    AXI_stream fifo(
 //    .clk(clk),
 //    .reset_n(~rst), 
@@ -230,7 +205,6 @@ module nfmac10g_loopback_tb (
 //    .stream_in_tdata(rx_axis_tdata),
 //    .stream_in_tkeep(rx_axis_tkeep)
 //    );
-
 //-------------------------------------------------------
 //     Parser + axi
 //-------------------------------------------------------   
@@ -239,10 +213,7 @@ module nfmac10g_loopback_tb (
         .ib_rst(rst),
         .iv_din_a(din_a),
         .iv_addr_a(addr_a),
-        .ib_write_enable(write_enable),
-//        -- iv_data                 : in std_logic_vector(NUM_INPUT_PKT_BITS-1 downto 0);
-//        .iv_metadata(metadata),
-        
+        .ib_write_enable(write_enable),       
         .ib_start_frame(ib_start_frame),
         .ib_end_frame(rx_axis_tlast),
         
@@ -264,31 +235,12 @@ module nfmac10g_loopback_tb (
 //        ov_PHV_data14           : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
 //        ov_PHV_data15           : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
       .ov_prt_bitmap(ov_prt_bitmap),
-
 //    ---------------------------------AXI INTERFACES---------------------------------    
-//    -- clk               : in  std_logic;  -- axi clk
-//    -- reset_n           : in  std_logic;  -- asynchronous reset (active low)
-//    -- master interface
     .stream_out_tready(1'b1),
     .stream_out_tlast(fifo_oc_tlast),
     .stream_out_tvalid(fifo_oc_tvalid),
     .stream_out_tdata(fifo_oc_tdata),
     .stream_out_tkeep(fifo_oc_tkeep),
- 
-//     .stream_out_tready(1'b1),
-//    .stream_out_tlast(tx_axis_tlast),
-//    .stream_out_tvalid(tx_axis_tvalid),
-//    .stream_out_tdata(tx_axis_tdata),
-//    .stream_out_tkeep(tx_axis_tkeep),
-       
-//        .tx_axis_aresetn(tx_axis_aresetn),                     // I
-//        .tx_axis_tdata(tx_axis_tdata),                         // I [63:0]
-//        .tx_axis_tkeep(tx_axis_tkeep),                         // I [7:0]
-//        .tx_axis_tvalid(tx_axis_tvalid),                       // I
-//        .tx_axis_tready(tx_axis_tready),                       // O
-//        .tx_axis_tlast(tx_axis_tlast),                         // I
-//        .tx_axis_tuser(tx_axis_tuser),                         // I [0:0]
-        
 //    -- slave interface
     .stream_in_tvalid(rx_axis_tvalid),
     .stream_in_tlast(rx_axis_tlast),
@@ -319,20 +271,12 @@ module nfmac10g_loopback_tb (
 //        .rx_axis_tvalid(rx_axis_tvalid),                       // I
 //        .rx_axis_tlast(rx_axis_tlast),                         // I
 //        .rx_axis_tuser(rx_axis_tuser),                         // I [0:0]
-
         .rx_axis_aresetn(tx_axis_aresetn),                     // I
         .rx_axis_tdata(fifo_oc_tdata),                         // I [63:0]
         .rx_axis_tkeep(fifo_oc_tkeep),                         // I [7:0]
         .rx_axis_tvalid(fifo_oc_tvalid),                       // I
         .rx_axis_tlast(fifo_oc_tlast),                         // I
         .rx_axis_tuser(rx_axis_tuser),                         // I [0:0]
-                
-//            .stream_out_tready(1'b1),
-//    .stream_out_tlast(fifo_oc_tlast),
-//    .stream_out_tvalid(fifo_oc_tvalid),
-//    .stream_out_tdata(fifo_oc_tdata),
-//    .stream_out_tkeep(fifo_oc_tkeep),
-    
         // Sim info, stim_axis_tx
         .input_pkts_done(input_pkts_done),                     // I
         .aborted_pkts(aborted_pkts),                           // I [63:0]
@@ -341,7 +285,6 @@ module nfmac10g_loopback_tb (
         .pkts_detected(xgmii_pkts_detected),                   // I [63:0]
         .corrupted_pkts(xgmii_corrupted_pkts)                  // I [63:0]
         );
-
     //-------------------------------------------------------
     // Test
     //-------------------------------------------------------
@@ -352,7 +295,6 @@ module nfmac10g_loopback_tb (
         rx_dcm_locked = 0;
         tx_axis_aresetn = 0;
         rx_axis_aresetn = 0;
-
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////       
    //----------------------FILL THE MEMORY------------------------
@@ -367,43 +309,35 @@ module nfmac10g_loopback_tb (
 //        din_a<={100'h08006_81003_91002_88474_86dd7, 4'h0, 8'hFF, 16'h000c, 16'h000e , 1'b1 ,4'h2, 4'h3,4'h0,4'h0,4'h0, 1'b1,1'b0, 167'b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000};
 //                  -------------100bits-----------------------44bits-------------1bit---------------20bits----------------------2bits-------     -----------------mem_data of the first connection--------------------------------------------------------------------------------------------------------------------------
 //                  -------------------------------------------------------------------167-----------------------------------------------------------
-        #10;
-        
+        #10;     
 //        --#2--vlan
         addr_a<=4'b0010;
         din_a<={100'h81003_FFFF0_FFFF0_FFFF0_FFFF0, 44'h0FF00020004, 1'b1,   20'h23000,      2'b01,   100'h0800686dd7FFFF0FFFF0FFFF0, 44'h0FF00020004, 1'b1,     20'hFFFFF,  2'b00};
-        #10;
-        
+        #10;      
 //        --#3--vlan
         addr_a<=4'b0011;
         din_a<={100'h08006_86dd7_FFFF0_FFFF0_FFFF0, 44'h0FF00020004, 1'b1,   20'hFFFFF,    2'b00,   167'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000};
-        #10; 
-         
+        #10;     
 //        --#4--mpls--does not work for packet 2&3
         addr_a<=4'b0100;
         din_a<={100'h00005_FFFF0_FFFF0_FFFF0_FFFF0, 44'h10700020004, 1'b0,   20'hFFFFF,     2'b00,   167'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000};
         #10;
-
 //        --#5--mpls--does not work for packet 2&3
         addr_a<=4'b0101;
         din_a<={100'hFFFF0_FFFF0_FFFF0_FFFF0_FFFF0, 44'h10700020004, 1'b0,   20'hFFFFF,   2'b00,      167'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000};
         #10;  
-
 //        --#6--ipv4
         addr_a<=4'b0110;
         din_a<={100'h0100C_1100A_0600B_FFFF0_FFFF0, 44'h0FF00090020, 1'b0,   20'hFFFFF,    2'b00,      167'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000};
-        #10;
-                              
+        #10;                            
 //        --#7--ipv6
         addr_a<=4'b0111;
         din_a<={100'h00008_3A00C_1100A_0600B_FFFF0, 44'h0FF00060028, 1'b0,   20'hFFFFF,    2'b00,      167'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000};
         #10;
-        
 //        --#8--ext1
         addr_a<=4'b1000;
         din_a<={100'h1100A_0600B_3A00C_3C009_FFFF0, 44'h0FF00000008, 1'b0,   20'hFFFFF,    2'b00,      167'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000};
         #10;
-        
 //        --#9--ext2
         addr_a<=4'b1001;
         din_a<={100'h1100A_0600B_3A00C_FFFF0_FFFF0, 44'h0FF00000008, 1'b0,   20'hFFFFF,    2'b00,      167'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000};
@@ -435,92 +369,3 @@ module nfmac10g_loopback_tb (
 
 endmodule // nfmac10g_loopback_tb
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-//     //-------------------------------------------------------
-    // Parser + axi
-    //-------------------------------------------------------   
-    
-//    parser_top parser(
-//        .ib_clk(clk),
-//        .ib_rst(rst),
-//        .iv_din_a(din_a),
-//        .iv_addr_a(addr_a),
-//        .ib_write_enable(write_enable),
-////        -- iv_data                 : in std_logic_vector(NUM_INPUT_PKT_BITS-1 downto 0);
-//        .iv_metadata(iv_metadata),
-//        .ov_this_prt_addr(this_prt_addr),
-////        ov_PHV_data0            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data1            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data2            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data3            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data4            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data5            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data6            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data7            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data8            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data9            : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data10           : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data11           : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data12           : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data13           : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data14           : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-////        ov_PHV_data15           : out std_logic_vector(PHV_MEM_WIDTH-1 downto 0);
-//      .ov_prt_bitmap(ov_prt_bitmap),
-
-////    ---------------------------------AXI INTERFACES---------------------------------    
-////    -- clk               : in  std_logic;  -- axi clk
-////    -- reset_n           : in  std_logic;  -- asynchronous reset (active low)
-////    -- master interface
-//    .stream_out_tready(1'b1),
-//    .stream_out_tlast(fifo_oc_tlast),
-//    .stream_out_tvalid(fifo_oc_tvalid),
-//    .stream_out_tdata(fifo_oc_tdata),
-//    .stream_out_tkeep(fifo_oc_tkeep),
-////    -- slave interface
-//    .stream_in_tvalid(rx_axis_tvalid),
-//    .stream_in_tlast(rx_axis_tlast),
-//    .stream_in_tready(rx_axis_tready),
-//    .stream_in_tdata(rx_axis_tdata),
-//    .stream_in_tkeep(rx_axis_tkeep)
-//   );
-   //-------------------------------------------------------
-    // Start signal
-    //-------------------------------------------------------
-//  entity edge_detector is
-//    port (
-//        signal_in : in  std_logic;
-//        signal_out : out std_logic
-//    );
-//end entity;
-//    edge_detector ed(
-//    .ib_clk(clk),
-//    .ib_rst(rst),
-//    .signal_in(rx_axis_tvalid),
-//    .signal_last_in(rx_axis_tlast),
-//    .signal_out(iv_metadata)
-//    );
-
-
-   //-------------------------------------------------------
-    // Start signal
-    //-------------------------------------------------------
-//  entity edge_detector is
-//    port (
-//        signal_in : in  std_logic;
-//        signal_out : out std_logic
-//    );
-//end entity;
-//    edge_detector ed(
-//    .ib_clk(clk),
-//    .ib_rst(rst),
-//    .signal_in(rx_axis_tvalid),
-//    .signal_last_in(rx_axis_tlast),
-//    .signal_out(iv_metadata)
-//    );
-    //-------------------------------------------------------
