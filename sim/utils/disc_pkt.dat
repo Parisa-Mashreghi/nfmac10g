@@ -1,0 +1,10 @@
+wire [1:0] disc_pkt[0:PKT_COUNT-1]; 
+/* 0: no-discontinue -- 1: tuser (explicit underrun) -- 2: tvalid (implicit underrun)*/
+assign disc_pkt[0] = 2'd0;
+assign disc_pkt[1] = 2'd0;
+assign disc_pkt[2] = 2'd0;
+assign disc_pkt[3] = 2'd0;
+assign disc_pkt[4] = 2'd0;
+assign disc_pkt[5] = 2'd0;
+assign disc_pkt[6] = 2'd0;
+assign disc_pkt[7] = 2'd0;

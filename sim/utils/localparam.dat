@@ -1,0 +1,2 @@
+localparam DATA_SIZE = 155;
+localparam PKT_COUNT  = 8;
